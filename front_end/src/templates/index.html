@@ -1,0 +1,60 @@
+<!doctype html>
+<title>Formality Meter</title>
+<head>
+    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='bootstrap.css') }}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='theme.css') }}" rel="stylesheet">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div>
+        <h1 style="text-align: center; padding:10px; width: 100%;">
+            Formality Meter
+        </h1>
+    </div>
+    
+    <div class="container mt-1 mb-5" >
+            <div class="d-flex row">
+                <div class="form-horizontal col">
+                    <form action="{{ url_for('index') }}" method="post" id="text-form">
+                        <div class="form-group form-group-lg">
+                            <textarea type="text-area" class="form-control" id="text" name="text" rows="20">{% if res %}{{ res.text }}{% endif %}</textarea>
+                        </div>
+                    </form>
+                    <div class="d-flex justify-content-end ">
+                        <a class="btn btn-secondary m-2" role="button" href="{{ url_for('example') }}">Example</a>
+                        <button type="submit" class="btn btn-primary align-middle m-2" form="text-form">Analyze</button>
+                    </div>
+                </div>
+                <div class="col">
+                    {% if res %}
+                    {% if 'formality_score' in res %}
+                    <h2>Formality: {{ res.formality_score}}%</h2>
+                    {% endif %}    
+
+                    <div class="d-flex flex-row flex-wrap">
+                        {% for w in res.words_scored %}
+                        <span class="badge my_badge" style="background-color:white;
+                        border-radius: 0;
+                        {% if w[1] > 0.1 %}
+                        background-image: linear-gradient(to right, 
+                        rgba(255,255,0,{{ res.words_scored[loop.index0][1]}}),
+                        rgba(255,255,0,{{ res.words_scored[loop.index0][1]}}),
+                        rgba(255,255,0,{{ res.words_scored[[loop.index0 +1, res.words_scored|length -1 ]|min][1]}})
+                        );
+                        {% endif %}
+                        color: {% if w[1] > 0.5 %} #000000 {% else %} #000000 {% endif %};)">{{ w[0]}}&nbsp;</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+    </div>
+</body>

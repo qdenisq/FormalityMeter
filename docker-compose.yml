@@ -1,0 +1,23 @@
+version: "3.9"
+networks:
+    isolation-network:
+      driver: bridge
+  
+services:
+  frontend:
+    build:
+      context: ./front_end/
+      dockerfile: ./Dockerfile
+    ports:
+      - "5050:5050" 
+    networks:
+      - isolation-network
+
+  formality_api:
+    build:
+      context: ./bento_bundles/bundle
+      dockerfile: ./Dockerfile
+    ports:
+      - "5000:5000" 
+    networks:
+      - isolation-network
